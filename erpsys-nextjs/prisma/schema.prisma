@@ -1,0 +1,140 @@
+// This is your Prisma schema file for MongoDB
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  username     String   @unique
+  passwordHash String
+  role         Role     @default(STUDENT)
+  email        String   @unique
+  createdAt    DateTime @default(now())
+
+  student      Student?
+  instructor   Instructor?
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+  INSTRUCTOR
+}
+
+model Department {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  departmentName String       @unique
+  hodId          String?      @db.ObjectId
+  students       Student[]
+  instructors    Instructor[]
+  courses        Course[]
+  hod            Instructor?  @relation("DepartmentHOD", fields: [hodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Student {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String        @unique @db.ObjectId
+  name            String
+  rollNo          String        @unique
+  email           String        @unique
+  phone           String?
+  dob             DateTime?
+  enrollmentDate  DateTime      @default(now())
+  departmentId    String        @db.ObjectId
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department      Department    @relation(fields: [departmentId], references: [id])
+  enrollments     Enrollment[]
+  marks           StudentMark[]
+}
+
+model Instructor {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String        @unique @db.ObjectId
+  name          String
+  email         String        @unique
+  phone         String?
+  departmentId  String        @db.ObjectId
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department    Department    @relation(fields: [departmentId], references: [id])
+  classes       Class[]
+  managedDept   Department[]  @relation("DepartmentHOD")
+}
+
+model Semester {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  semesterName   String   @unique
+  startDate      DateTime
+  endDate        DateTime
+  classes        Class[]
+}
+
+model Course {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  courseCode     String     @unique
+  courseName     String
+  credits        Int
+  departmentId   String     @db.ObjectId
+
+  department     Department @relation(fields: [departmentId], references: [id])
+  classes        Class[]
+}
+
+model Class {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  courseId       String       @db.ObjectId
+  instructorId   String       @db.ObjectId
+  semesterId     String       @db.ObjectId
+  location       String?
+  schedule       String?
+
+  course         Course       @relation(fields: [courseId], references: [id])
+  instructor     Instructor   @relation(fields: [instructorId], references: [id])
+  semester       Semester     @relation(fields: [semesterId], references: [id])
+  enrollments    Enrollment[]
+  assessments    Assessment[]
+}
+
+model Enrollment {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentId      String   @db.ObjectId
+  classId        String   @db.ObjectId
+  enrollmentDate DateTime @default(now())
+  finalGrade     String?  @default("N/A")
+
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class          Class    @relation(fields: [classId], references: [id])
+
+  @@unique([studentId, classId])
+}
+
+model Assessment {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  classId        String        @db.ObjectId
+  assessmentName String
+  maxMarks       Int
+  assessmentDate DateTime?
+
+  class          Class         @relation(fields: [classId], references: [id])
+  marks          StudentMark[]
+}
+
+model StudentMark {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentId      String   @db.ObjectId
+  assessmentId   String   @db.ObjectId
+  marksObtained  Float
+
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assessment     Assessment @relation(fields: [assessmentId], references: [id])
+
+  @@unique([studentId, assessmentId])
+}
