@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
+import ChatBot from "@/components/ChatBot";
 
 interface Course {
   courseCode: string;
@@ -127,6 +128,10 @@ export default function StudentDashboardPage() {
           </div>
         </div>
       </div>
+      <ChatBot
+        title="Educational Assistant"
+        context="You are helping students with their academic journey. Answer questions about courses, assignments, grades, and provide study guidance."
+      />
     </div>
   );
 }

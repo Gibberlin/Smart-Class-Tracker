@@ -1,240 +1,139 @@
-# ERP System - Next.js + MongoDB Setup & Deployment Guide
+# ERP System - Deployment Guide
 
-## 🚀 Quick Start
+Complete setup and deployment instructions for the Smart Class Tracker ERP System.
 
-### Prerequisites
-- Node.js 18+
-- MongoDB Atlas account (free tier available)
-- Git
+## Table of Contents
 
-### Installation
+1. [Prerequisites](#prerequisites)
+2. [Local Development Setup](#local-development-setup)
+3. [Environment Configuration](#environment-configuration)
+4. [Database Setup](#database-setup)
+5. [Running the Application](#running-the-application)
+6. [Deployment to Production](#deployment-to-production)
+7. [API Documentation](#api-documentation)
+8. [Troubleshooting](#troubleshooting)
 
-**1. Clone the repository**
+---
+
+## Prerequisites
+
+Before deploying, ensure you have:
+
+- **Node.js** v16+ ([Download](https://nodejs.org))
+- **npm** or **yarn** package manager
+- **MongoDB Atlas** account (free tier available)
+- **Groq API Key** ([Get API Key](https://console.groq.com))
+- **Git** for version control
+
+---
+
+## Local Development Setup
+
+### 1. Clone the Repository
+
 ```bash
+git clone <repository-url>
 cd erpsys-nextjs
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
 ```
 
-**2. Configure MongoDB**
-- Sign up at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- Create a free cluster
-- Get your connection string: `mongodb+srv://username:password@cluster.mongodb.net/studentdb`
+### 3. Create Environment Variables
 
-**3. Set environment variables** (`.env`)
+Create `.env.local` file:
+
 ```bash
-DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/studentdb?appName=Cluster0"
-JWT_SECRET="your-production-secret-key"
+DATABASE_URL="mongodb+srv://user:pass@cluster.mongodb.net/studentdb"
+JWT_SECRET="your-secret-key-change-in-production"
 JWT_EXPIRATION="7d"
 NEXT_PUBLIC_API_URL="http://localhost:3000"
-```
-
-**4. Initialize database**
-```bash
-npm run db:push      # Create collections
-npm run db:seed      # Add sample data
-```
-
-**5. Run development server**
-```bash
-npm run dev
-```
-Visit **http://localhost:3000** (or 3001 if 3000 is in use)
-
----
-
-## 📝 Default Login Credentials
-
-### Admin Portal
-- **URL:** `http://localhost:3000/admin/login`
-- **Username:** `admin`
-- **Password:** `admin123`
-
-### Student Portal
-- **URL:** `http://localhost:3000/student/login`
-- **Username:** `student001`
-- **Password:** `student123`
-
----
-
-## 🏗️ Architecture
-
-### Database Models (MongoDB)
-- **User** - Authentication (Admin, Student, Instructor)
-- **Department** - Academic departments
-- **Student** - Student records
-- **Instructor** - Faculty members
-- **Course** - Course catalog
-- **Class** - Course sections/batches
-- **Semester** - Academic periods
-- **Enrollment** - Student course registrations
-- **Assessment** - Exams/assignments
-- **StudentMark** - Grade records
-
-### API Routes
-
-#### Authentication
-- `POST /api/admin/login` - Admin login
-- `POST /api/student/login` - Student login
-- `POST /api/student/register` - Student registration
-- `POST /api/auth/logout` - Logout
-
-#### Student APIs
-- `GET /api/student/profile` - Student profile
-- `GET /api/student/courses` - Enrolled courses
-- `GET /api/student/grades` - Course grades
-
-#### Admin APIs
-- `GET /api/admin/students` - List students
-- `POST /api/admin/students` - Create student
-- `GET /api/admin/departments` - List departments
-- `POST /api/admin/departments` - Create department
-- Similar endpoints for: courses, classes, instructors, semesters
-
----
-
-## 📂 Project Structure
-
-```
-erpsys-nextjs/
-├── app/
-│   ├── api/                    # API routes
-│   │   ├── admin/             # Admin endpoints
-│   │   ├── student/           # Student endpoints
-│   │   └── auth/              # Auth endpoints
-│   ├── admin/                 # Admin pages
-│   │   ├── dashboard/
-│   │   ├── login/
-│   │   └── students/
-│   ├── student/               # Student pages
-│   │   ├── dashboard/
-│   │   ├── login/
-│   │   ├── courses/
-│   │   └── grades/
-│   ├── layout.tsx
-│   └── page.tsx              # Home page
-├── components/               # Reusable React components
-├── lib/
-│   ├── auth.ts              # JWT & auth utilities
-│   ├── db.ts                # Prisma client singleton
-│   └── types.ts             # TypeScript types
-├── prisma/
-│   ├── schema.prisma        # Database schema
-│   └── seed.ts              # Sample data seeding
-├── .env                     # Environment variables
-├── package.json
-└── tsconfig.json
+GROQ_API_KEY="your-groq-api-key"
+GROQ_MODEL="mixtral-8x7b-32768"
 ```
 
 ---
 
-## 🛠️ Development Commands
+## Database Setup
+
+### Initialize Prisma
 
 ```bash
-# Install dependencies
-npm install
-
-# Start dev server (hot reload)
-npm run dev
-
-# Build for production
-npm build
-
-# Start production server
-npm start
-
-# Database operations
-npm run db:push              # Sync schema to database
-npm run db:seed              # Seed sample data
-npx prisma studio           # GUI for database
-
-# Type checking
-npx tsc --noEmit
-
-# Generate Prisma client
+npm run db:push
 npx prisma generate
 ```
 
+### Seed Database
+
+```bash
+npm run db:seed
+```
+
+**Default Credentials:**
+- Admin: `username: admin` | `password: admin123`
+- Student: `username: student001` | `password: student123`
+
 ---
 
-## 📦 Production Deployment
+## Running the Application
 
-### Deploy to Vercel (Recommended)
+### Development
 
-**1. Push code to GitHub**
 ```bash
-git add .
-git commit -m "Initial deployment"
-git push origin main
+npm run dev
 ```
 
-**2. Deploy via Vercel**
-- Go to [vercel.com/new](https://vercel.com/new)
-- Import your repository
-- Add environment variables (same as `.env`)
-- Click Deploy
+Access at: http://localhost:3000
 
-**3. Set up MongoDB connection**
-- Ensure MongoDB Atlas allows Vercel IP (IP Whitelist)
-- Or use MongoDB Atlas "Allow access from anywhere" (less secure)
+### Production Build
 
-### Deploy via Docker
-
-**1. Build Docker image**
 ```bash
-docker build -t erpsys-nextjs .
+npm run build
+npm run start
 ```
 
-**2. Run container**
+---
+
+## Deployment Options
+
+### Vercel (Recommended)
+
+1. Connect GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard
+3. Deploy automatically on push
+
+### Docker
+
 ```bash
+docker build -t erpsys:latest .
 docker run -p 3000:3000 \
-  -e DATABASE_URL="mongodb+srv://..." \
-  -e JWT_SECRET="your-secret" \
-  erpsys-nextjs
+  -e DATABASE_URL="your-db-url" \
+  -e GROQ_API_KEY="your-key" \
+  erpsys:latest
 ```
 
-### Deploy via Render, Railway, or Fly.io
-- Connect GitHub repository
-- Set environment variables in dashboard
-- Deploy with one click
+### Railway
+
+1. Connect GitHub to Railway
+2. Add environment variables
+3. Deploy automatically
 
 ---
 
-## 🔒 Security Checklist
+## Features
 
-- [ ] Change `JWT_SECRET` in production
-- [ ] Use strong passwords
-- [ ] Enable HTTPS only in production
-- [ ] Set secure MongoDB Atlas IP whitelist
-- [ ] Use environment variables for secrets (never commit `.env`)
-- [ ] Enable rate limiting on API endpoints
-- [ ] Implement CSRF protection
-- [ ] Enable CORS properly
+- ✅ MongoDB Atlas integration with Prisma ORM
+- ✅ JWT-based authentication
+- ✅ Admin management system
+- ✅ Student dashboard
+- ✅ Groq AI-powered chatbot
+- ✅ Responsive UI with Tailwind CSS
 
 ---
 
-## 🐛 Troubleshooting
+## Support
 
-### "Can't reach database"
-- Verify MongoDB Atlas cluster is running
-- Check IP whitelist in MongoDB Atlas (allow your IP)
-- Confirm DATABASE_URL is correct
-
-### "Port 3000 already in use"
-- Find process: `lsof -i :3000` (Mac/Linux) or `netstat -ano | findstr :3000` (Windows)
-- Kill it: `kill -9 PID` or `taskkill /PID PID /F`
-- Or use different port: `PORT=3001 npm run dev`
-
-### Login not working
-- Clear browser cookies
-- Check browser console for errors
-- Verify JWT_SECRET matches between .env and auth.ts
-- Ensure database is seeded with users
-
----
-
-## 📚 Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Docs](https://www.prisma.io/docs)
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- [Tailwind CSS](https://tailwindcss.com)
+For issues, check the GitHub repository or documentation.

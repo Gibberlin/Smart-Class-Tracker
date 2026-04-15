@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { table: string; id: string } }
+  context: any
 ) {
   try {
+    const params = await context.params;
     const user = await getAuthUser();
 
     if (!user || user.role !== "ADMIN") {
@@ -17,7 +18,7 @@ export async function PUT(
     }
 
     const table = params.table.toLowerCase();
-    const id = parseInt(params.id, 10);
+    const id = params.id;
     const body = await request.json();
 
     const tableMap: {
@@ -64,9 +65,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { table: string; id: string } }
+  context: any
 ) {
   try {
+    const params = await context.params;
     const user = await getAuthUser();
 
     if (!user || user.role !== "ADMIN") {
@@ -77,7 +79,7 @@ export async function DELETE(
     }
 
     const table = params.table.toLowerCase();
-    const id = parseInt(params.id, 10);
+    const id = params.id;
 
     const tableMap: {
       [key: string]: keyof typeof prisma;

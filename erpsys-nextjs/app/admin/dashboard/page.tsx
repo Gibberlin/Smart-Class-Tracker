@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
+import ChatBot from "@/components/ChatBot";
 
 interface DashboardStats {
   studentCount: number;
@@ -113,6 +114,10 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
+      <ChatBot
+        title="Admin Assistant"
+        context="You are an administrative assistant helping with managing the education system. Answer questions about student records, course management, instructor assignments, and system administration."
+      />
     </div>
   );
 }

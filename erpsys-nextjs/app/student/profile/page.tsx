@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import ChatBot from "@/components/ChatBot";
 
 interface StudentProfile {
   name: string;
@@ -124,6 +125,10 @@ export default function StudentProfilePage() {
           </div>
         )}
       </div>
+      <ChatBot
+        title="Help Assistant"
+        context="You are helping students with account and profile information. Answer questions about their student profile, contact information, and general assistance."
+      />
     </div>
   );
 }

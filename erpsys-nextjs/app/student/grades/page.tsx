@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import ChatBot from "@/components/ChatBot";
 
 interface Grade {
   courseCode: string;
@@ -124,6 +125,10 @@ export default function StudentGradesPage() {
           </div>
         )}
       </div>
+      <ChatBot
+        title="Grades Assistant"
+        context="You are helping students understand their grades, assessments, and performance. Answer questions about how grades are calculated, how to improve, and academic progress."
+      />
     </div>
   );
 }

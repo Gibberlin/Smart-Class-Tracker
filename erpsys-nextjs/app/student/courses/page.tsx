@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import ChatBot from "@/components/ChatBot";
 
 interface Course {
   enrollmentId: number;
@@ -115,6 +116,10 @@ export default function StudentCoursesPage() {
           </div>
         )}
       </div>
+      <ChatBot
+        title="Course Assistant"
+        context="You are helping students understand their enrolled courses, assignments, and course materials. Answer questions about course content, deadlines, and study tips."
+      />
     </div>
   );
 }
