@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
 import ProtectedPage from "@/components/ProtectedPage";
 
 interface Class {
@@ -119,6 +120,18 @@ export default function AdminClassesPage() {
     }
   };
 
+  const handleEdit = (cls: Class) => {
+    setEditingId(cls.id);
+    setFormData({
+      courseId: cls.course.id,
+      instructorId: cls.instructor.id,
+      semesterId: cls.semester.id,
+      location: cls.location || "",
+      schedule: cls.schedule || "",
+    });
+    setShowForm(true);
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
     try {
@@ -134,9 +147,12 @@ export default function AdminClassesPage() {
 
   return (
     <ProtectedPage requiredRole="ADMIN">
-      <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Classes</h1>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar userType="admin" username="Admin" />
+
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Manage Classes</h1>
         <button
           onClick={() => {
             setEditingId(null);
@@ -149,23 +165,23 @@ export default function AdminClassesPage() {
               schedule: "",
             });
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="w-full sm:w-auto bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 font-semibold text-center text-sm sm:text-base"
         >
           Add Class
         </button>
       </div>
 
-      {error && <div className="bg-red-100 p-4 mb-4 rounded text-red-700">{error}</div>}
+      {error && <div className="bg-red-100 p-3 sm:p-4 mb-4 rounded text-red-700 text-sm sm:text-base">{error}</div>}
 
       {showForm && (
-        <div className="bg-white p-6 rounded shadow mb-6">
-          <h2 className="text-2xl font-bold mb-4">{editingId ? "Edit Class" : "Add New Class"}</h2>
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">{editingId ? "Edit Class" : "Add New Class"}</h2>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <select
                 value={formData.courseId}
                 onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
-                className="border p-2 rounded text-gray-900"
+                className="border p-2 sm:p-3 rounded text-gray-900 text-sm sm:text-base"
                 required
               >
                 <option value="">Select Course</option>
@@ -178,7 +194,7 @@ export default function AdminClassesPage() {
               <select
                 value={formData.instructorId}
                 onChange={(e) => setFormData({ ...formData, instructorId: e.target.value })}
-                className="border p-2 rounded text-gray-900"
+                className="border p-2 sm:p-3 rounded text-gray-900 text-sm sm:text-base"
                 required
               >
                 <option value="">Select Instructor</option>
@@ -191,7 +207,7 @@ export default function AdminClassesPage() {
               <select
                 value={formData.semesterId}
                 onChange={(e) => setFormData({ ...formData, semesterId: e.target.value })}
-                className="border p-2 rounded text-gray-900"
+                className="border p-2 sm:p-3 rounded text-gray-900 text-sm sm:text-base"
                 required
               >
                 <option value="">Select Semester</option>
@@ -206,18 +222,18 @@ export default function AdminClassesPage() {
                 placeholder="Location (e.g., Room 101)"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="border p-2 rounded text-gray-900 placeholder-gray-500"
+                className="border p-2 sm:p-3 rounded text-gray-900 placeholder-gray-500 text-sm sm:text-base"
               />
               <input
                 type="text"
                 placeholder="Schedule (e.g., Mon, Wed 10:00-11:00)"
                 value={formData.schedule}
                 onChange={(e) => setFormData({ ...formData, schedule: e.target.value })}
-                className="border p-2 rounded col-span-2 text-gray-900 placeholder-gray-500"
+                className="border p-2 sm:p-3 rounded col-span-1 sm:col-span-2 text-gray-900 placeholder-gray-500 text-sm sm:text-base"
               />
             </div>
-            <div className="flex gap-2 mt-4">
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <div className="flex flex-col sm:flex-row gap-2 mt-4">
+              <button type="submit" className="w-full sm:w-auto bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 font-semibold text-sm sm:text-base">
                 Save
               </button>
               <button
@@ -226,7 +242,7 @@ export default function AdminClassesPage() {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                className="w-full sm:w-auto bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 font-semibold text-sm sm:text-base"
               >
                 Cancel
               </button>
@@ -235,30 +251,36 @@ export default function AdminClassesPage() {
         </div>
       )}
 
-      <div className="overflow-x-auto bg-white rounded shadow">
-        <table className="w-full">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="w-full text-xs sm:text-sm">
+          <thead className="bg-teal-600 text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Course</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Instructor</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Semester</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Location</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Schedule</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">Course</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden sm:table-cell">Instructor</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden md:table-cell">Semester</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden lg:table-cell">Location</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden lg:table-cell">Schedule</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {classes.map((cls) => (
               <tr key={cls.id} className="border-t hover:bg-gray-50">
-                <td className="px-6 py-4">{cls.course.courseCode} - {cls.course.courseName}</td>
-                <td className="px-6 py-4">{cls.instructor.name}</td>
-                <td className="px-6 py-4">{cls.semester.semesterName}</td>
-                <td className="px-6 py-4">{cls.location || "-"}</td>
-                <td className="px-6 py-4">{cls.schedule || "-"}</td>
-                <td className="px-6 py-4 flex gap-2">
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 font-semibold min-w-max">{cls.course.courseCode} - {cls.course.courseName}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden sm:table-cell min-w-max">{cls.instructor.name}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden md:table-cell">{cls.semester.semesterName}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden lg:table-cell">{cls.location || "-"}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden lg:table-cell">{cls.schedule || "-"}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 flex gap-1 sm:gap-2">
+                  <button
+                    onClick={() => handleEdit(cls)}
+                    className="text-blue-600 hover:underline text-xs sm:text-sm"
+                  >
+                    Edit
+                  </button>
                   <button
                     onClick={() => handleDelete(cls.id)}
-                    className="text-red-600 hover:underline text-sm"
+                    className="text-red-600 hover:underline text-xs sm:text-sm"
                   >
                     Delete
                   </button>
@@ -272,6 +294,7 @@ export default function AdminClassesPage() {
       {classes.length === 0 && (
         <div className="text-center py-8 text-gray-500">No classes found</div>
       )}
+      </div>
       </div>
     </ProtectedPage>
   );

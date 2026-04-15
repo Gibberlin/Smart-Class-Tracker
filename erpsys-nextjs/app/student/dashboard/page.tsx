@@ -51,37 +51,37 @@ export default function StudentDashboardPage() {
       <div className="min-h-screen bg-gray-50">
         <Navbar userType="student" username="Student" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Dashboard</h1>
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">My Dashboard</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
               Enrolled Courses
             </h2>
 
             {courses.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {courses.map((course) => (
                   <div
                     key={course.courseCode}
-                    className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition"
+                    className="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition"
                   >
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-2">
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900">
+                        <h3 className="text-base sm:text-lg font-bold text-gray-900">
                           {course.courseName}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600">
                           {course.courseCode}
                         </p>
                       </div>
-                      <span className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      <span className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
                         {course.finalGrade || "N/A"}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4 text-xs sm:text-sm">
                       <div>
                         <p className="text-gray-600">Instructor</p>
                         <p className="font-semibold text-gray-900">
@@ -106,23 +106,23 @@ export default function StudentDashboardPage() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Links</h2>
-            <div className="space-y-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Quick Links</h2>
+            <div className="space-y-2 sm:space-y-3">
               <a
                 href="/student/courses"
-                className="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:border-teal-600 border-2 border-transparent transition text-teal-600 font-semibold"
+                className="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:border-teal-600 border-2 border-transparent transition text-teal-600 font-semibold text-sm sm:text-base"
               >
                 View All Courses
               </a>
               <a
                 href="/student/grades"
-                className="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:border-teal-600 border-2 border-transparent transition text-teal-600 font-semibold"
+                className="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:border-teal-600 border-2 border-transparent transition text-teal-600 font-semibold text-sm sm:text-base"
               >
                 View Grades
               </a>
               <a
                 href="/student/profile"
-                className="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:border-teal-600 border-2 border-transparent transition text-teal-600 font-semibold"
+                className="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:border-teal-600 border-2 border-transparent transition text-teal-600 font-semibold text-sm sm:text-base"
               >
                 My Profile
               </a>

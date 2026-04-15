@@ -62,27 +62,27 @@ export default function StudentCoursesPage() {
       <div className="min-h-screen bg-gray-50">
         <Navbar userType="student" username={username || "Student"} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Courses</h1>
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-12">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">My Courses</h1>
 
         {courses.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full bg-white rounded-lg shadow-md">
+            <table className="w-full bg-white rounded-lg shadow-md text-xs sm:text-sm">
               <thead className="bg-teal-600 text-white">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">
                     Course Code
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden sm:table-cell">
                     Course Name
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden md:table-cell">
                     Instructor
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden lg:table-cell">
                     Credits
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">
                     Grade
                   </th>
                 </tr>
@@ -90,20 +90,20 @@ export default function StudentCoursesPage() {
               <tbody>
                 {courses.map((course) => (
                   <tr key={course.enrollmentId} className="border-b hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900 font-semibold">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-gray-900 font-semibold">
                       {course.courseCode}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden sm:table-cell">
                       {course.courseName}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden md:table-cell">
                       {course.instructor}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden lg:table-cell">
                       {course.credits}
                     </td>
-                    <td className="px-6 py-4 text-sm">
-                      <span className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full font-semibold">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4">
+                      <span className="bg-teal-100 text-teal-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
                         {course.finalGrade || "N/A"}
                       </span>
                     </td>
@@ -113,8 +113,8 @@ export default function StudentCoursesPage() {
             </table>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <p className="text-gray-600 text-lg">No courses enrolled yet.</p>
+          <div className="bg-white rounded-lg shadow-md p-6 sm:p-8 text-center">
+            <p className="text-gray-600 text-sm sm:text-lg">No courses enrolled yet.</p>
           </div>
         )}
       </div>

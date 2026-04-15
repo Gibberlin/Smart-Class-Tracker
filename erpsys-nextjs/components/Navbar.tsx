@@ -12,6 +12,7 @@ interface NavbarProps {
 export default function Navbar({ userType, username }: NavbarProps) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -43,27 +44,39 @@ export default function Navbar({ userType, username }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           <Link
             href={userType === "admin" ? "/admin/dashboard" : "/student/dashboard"}
-            className="text-2xl font-bold text-teal-600"
+            className="text-xl sm:text-2xl font-bold text-teal-600 truncate"
           >
             ERP System
           </Link>
 
+          {/* Desktop Menu */}
           <div className="hidden md:flex space-x-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 transition"
+                className="px-3 py-2 rounded-md text-sm font-semibold text-gray-700 hover:text-teal-600 hover:bg-gray-50 transition"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="relative">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-50"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          {/* User Dropdown */}
+          <div className="relative hidden sm:block">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 transition"
+              className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-semibold text-gray-700 hover:text-teal-600 hover:bg-gray-50 transition"
             >
               <span>{username}</span>
               <svg
@@ -103,7 +116,55 @@ export default function Navbar({ userType, username }: NavbarProps) {
               </div>
             )}
           </div>
+
+          {/* Mobile User Menu */}
+          <div className="sm:hidden relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="p-2 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </button>
+
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl py-2">
+                <Link
+                  href={
+                    userType === "admin" ? "/admin/profile" : "/student/profile"
+                  }
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Profile
+                </Link>
+                <hr className="my-1" />
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden pb-3 space-y-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </nav>
   );

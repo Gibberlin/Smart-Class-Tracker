@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import ProtectedPage from "@/components/ProtectedPage";
 
 interface Department {
@@ -15,6 +16,7 @@ export default function AdminDepartments() {
   const [loading, setLoading] = useState(true);
   const [newDept, setNewDept] = useState("");
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDepartments();
@@ -38,18 +40,27 @@ export default function AdminDepartments() {
     if (!newDept.trim()) return;
 
     try {
-      const res = await fetch("/api/admin/departments", {
-        method: "POST",
+      const method = editingId ? "PUT" : "POST";
+      const url = editingId ? `/api/admin/departments/${editingId}` : "/api/admin/departments";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ departmentName: newDept }),
       });
 
-      if (!res.ok) throw new Error("Failed to add department");
+      if (!res.ok) throw new Error(`Failed to ${editingId ? "update" : "add"} department`);
       setNewDept("");
+      setEditingId(null);
       fetchDepartments();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Error adding department");
+      alert(err instanceof Error ? err.message : `Error ${editingId ? "updating" : "adding"} department`);
     }
+  };
+
+  const handleEdit = (dept: Department) => {
+    setEditingId(dept.id);
+    setNewDept(dept.departmentName);
   };
 
   const handleDelete = async (id: string) => {
@@ -59,6 +70,8 @@ export default function AdminDepartments() {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete");
+      setEditingId(null);
+      setNewDept("");
       fetchDepartments();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Delete failed");
@@ -69,62 +82,77 @@ export default function AdminDepartments() {
 
   return (
     <ProtectedPage requiredRole="ADMIN">
-      <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Departments</h1>
-        <Link
-          href="/admin/dashboard"
-          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-        >
-          Back to Dashboard
-        </Link>
-      </div>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar userType="admin" username="Admin" />
 
-      {error && <div className="bg-red-100 p-4 mb-4 rounded text-red-700">{error}</div>}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Manage Departments</h1>
 
-      <div className="bg-white rounded shadow p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Add New Department</h2>
-        <form onSubmit={handleAddDepartment} className="flex gap-2">
+      {error && <div className="bg-red-100 p-3 sm:p-4 mb-4 rounded text-red-700 text-sm sm:text-base">{error}</div>}
+
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">{editingId ? "Edit Department" : "Add New Department"}</h2>
+        <form onSubmit={handleAddDepartment} className="flex flex-col sm:flex-row gap-2">
           <input
             type="text"
             placeholder="Department Name"
             value={newDept}
             onChange={(e) => setNewDept(e.target.value)}
-            className="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900 placeholder-gray-500"
+            className="flex-1 px-3 sm:px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-900 placeholder-gray-500 text-sm sm:text-base"
             required
           />
           <button
             type="submit"
-            className="bg-teal-600 text-white px-6 py-2 rounded hover:bg-teal-700"
+            className="w-full sm:w-auto bg-teal-600 text-white px-4 sm:px-6 py-2 rounded hover:bg-teal-700 font-semibold text-sm sm:text-base"
           >
-            Add
+            {editingId ? "Update" : "Add"}
           </button>
+          {editingId && (
+            <button
+              type="button"
+              onClick={() => {
+                setEditingId(null);
+                setNewDept("");
+              }}
+              className="w-full sm:w-auto bg-gray-600 text-white px-4 sm:px-6 py-2 rounded hover:bg-gray-700 font-semibold text-sm sm:text-base"
+            >
+              Cancel
+            </button>
+          )}
         </form>
       </div>
 
-      <div className="overflow-x-auto bg-white rounded shadow">
-        <table className="w-full">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="w-full text-xs sm:text-sm">
+          <thead className="bg-teal-600 text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Department</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Students</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Instructors</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+              <th className="px-3 sm:px-6 py-2 sm:py-3 text-left font-semibold">Department</th>
+              <th className="px-3 sm:px-6 py-2 sm:py-3 text-left font-semibold">Students</th>
+              <th className="px-3 sm:px-6 py-2 sm:py-3 text-left font-semibold">Instructors</th>
+              <th className="px-3 sm:px-6 py-2 sm:py-3 text-left font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {departments.map((dept) => (
               <tr key={dept.id} className="border-t hover:bg-gray-50">
-                <td className="px-6 py-4">{dept.departmentName}</td>
-                <td className="px-6 py-4">{dept._count?.students || 0}</td>
-                <td className="px-6 py-4">{dept._count?.instructors || 0}</td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => handleDelete(dept.id)}
-                    className="text-red-600 hover:underline text-sm"
-                  >
-                    Delete
-                  </button>
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-900 min-w-max">{dept.departmentName}</td>
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-900">{dept._count?.students || 0}</td>
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-900">{dept._count?.instructors || 0}</td>
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                  <div className="flex gap-1 sm:gap-2">
+                    <button
+                      onClick={() => handleEdit(dept)}
+                      className="text-blue-600 hover:underline text-xs sm:text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(dept.id)}
+                      className="text-red-600 hover:underline text-xs sm:text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -135,6 +163,7 @@ export default function AdminDepartments() {
       {departments.length === 0 && (
         <div className="text-center py-8 text-gray-500">No departments found</div>
       )}
+      </div>
       </div>
     </ProtectedPage>
   );

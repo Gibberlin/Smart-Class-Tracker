@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 import ProtectedPage from "@/components/ProtectedPage";
 
 interface Course {
@@ -112,35 +113,38 @@ export default function AdminCoursesPage() {
 
   return (
     <ProtectedPage requiredRole="ADMIN">
-      <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Courses</h1>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar userType="admin" username="Admin" />
+
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Manage Courses</h1>
         <button
           onClick={() => {
             setEditingId(null);
             setShowForm(true);
             setFormData({ courseCode: "", courseName: "", credits: "3", departmentId: departments[0]?.id || "" });
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="w-full sm:w-auto bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 font-semibold text-center text-sm sm:text-base"
         >
           Add Course
         </button>
       </div>
 
-      {error && <div className="bg-red-100 p-4 mb-4 rounded text-red-700">{error}</div>}
+      {error && <div className="bg-red-100 p-3 sm:p-4 mb-4 rounded text-red-700 text-sm sm:text-base">{error}</div>}
 
       {showForm && (
-        <div className="bg-white p-6 rounded shadow mb-6">
-          <h2 className="text-2xl font-bold mb-4">{editingId ? "Edit Course" : "Add New Course"}</h2>
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">{editingId ? "Edit Course" : "Add New Course"}</h2>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <input
                 type="text"
                 placeholder="Course Code"
                 required
                 value={formData.courseCode}
                 onChange={(e) => setFormData({ ...formData, courseCode: e.target.value })}
-                className="border p-2 rounded text-gray-900 placeholder-gray-500"
+                className="border p-2 sm:p-3 rounded text-gray-900 placeholder-gray-500 text-sm sm:text-base"
               />
               <input
                 type="text"
@@ -148,7 +152,7 @@ export default function AdminCoursesPage() {
                 required
                 value={formData.courseName}
                 onChange={(e) => setFormData({ ...formData, courseName: e.target.value })}
-                className="border p-2 rounded text-gray-900 placeholder-gray-500"
+                className="border p-2 sm:p-3 rounded text-gray-900 placeholder-gray-500 text-sm sm:text-base"
               />
               <input
                 type="number"
@@ -158,12 +162,12 @@ export default function AdminCoursesPage() {
                 max="4"
                 value={formData.credits}
                 onChange={(e) => setFormData({ ...formData, credits: e.target.value })}
-                className="border p-2 rounded text-gray-900 placeholder-gray-500"
+                className="border p-2 sm:p-3 rounded text-gray-900 placeholder-gray-500 text-sm sm:text-base"
               />
               <select
                 value={formData.departmentId}
                 onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
-                className="border p-2 rounded text-gray-900"
+                className="border p-2 sm:p-3 rounded text-gray-900 text-sm sm:text-base"
                 required
               >
                 <option value="">Select Department</option>
@@ -174,8 +178,8 @@ export default function AdminCoursesPage() {
                 ))}
               </select>
             </div>
-            <div className="flex gap-2 mt-4">
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <div className="flex flex-col sm:flex-row gap-2 mt-4">
+              <button type="submit" className="w-full sm:w-auto bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 font-semibold text-sm sm:text-base">
                 Save
               </button>
               <button
@@ -184,7 +188,7 @@ export default function AdminCoursesPage() {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                className="w-full sm:w-auto bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 font-semibold text-sm sm:text-base"
               >
                 Cancel
               </button>
@@ -193,34 +197,34 @@ export default function AdminCoursesPage() {
         </div>
       )}
 
-      <div className="overflow-x-auto bg-white rounded shadow">
-        <table className="w-full">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="w-full text-xs sm:text-sm">
+          <thead className="bg-teal-600 text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Code</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Course Name</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Credits</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Department</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">Code</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">Name</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden sm:table-cell">Credits</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold hidden md:table-cell">Department</th>
+              <th className="px-2 sm:px-6 py-2 sm:py-3 text-left font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {courses.map((course) => (
               <tr key={course.id} className="border-t hover:bg-gray-50">
-                <td className="px-6 py-4 font-mono">{course.courseCode}</td>
-                <td className="px-6 py-4">{course.courseName}</td>
-                <td className="px-6 py-4 text-center">{course.credits}</td>
-                <td className="px-6 py-4">{course.department.departmentName}</td>
-                <td className="px-6 py-4 flex gap-2">
+                <td className="px-2 sm:px-6 py-3 sm:py-4 font-mono text-gray-900 min-w-max">{course.courseCode}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 min-w-max">{course.courseName}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-center text-gray-900 hidden sm:table-cell">{course.credits}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 text-gray-900 hidden md:table-cell">{course.department.departmentName}</td>
+                <td className="px-2 sm:px-6 py-3 sm:py-4 flex gap-1 sm:gap-2">
                   <button
                     onClick={() => handleEdit(course)}
-                    className="text-blue-600 hover:underline text-sm"
+                    className="text-blue-600 hover:underline text-xs sm:text-sm"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(course.id)}
-                    className="text-red-600 hover:underline text-sm"
+                    className="text-red-600 hover:underline text-xs sm:text-sm"
                   >
                     Delete
                   </button>
@@ -234,6 +238,7 @@ export default function AdminCoursesPage() {
       {courses.length === 0 && (
         <div className="text-center py-8 text-gray-500">No courses found</div>
       )}
+      </div>
       </div>
     </ProtectedPage>
   );
