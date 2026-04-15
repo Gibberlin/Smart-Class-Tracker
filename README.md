@@ -28,10 +28,10 @@ The system aims to create a **modern digital learning environment** where educat
 
 ## 👨‍💼 Admin Portal
 
-* Manage students and teachers
-* Create and manage courses and classes
-* Monitor academic performance across the institution
-* Access system-wide analytics and reports
+* Manage students, courses, departments, instructors, semesters, and classes
+* Full CRUD operations (Create, Read, Update, Delete) for all entities
+* Responsive admin dashboard with real-time data management
+* Administrative statistics and system-wide analytics
 
 ---
 
@@ -75,31 +75,30 @@ Database (Students, Courses, Attendance, Assignments)
 
 ### Frontend
 
-* React.js
-* Next.js
-* Tailwind CSS
-* Shadcn UI
+* React.js 19
+* Next.js 16 with TypeScript
+* Tailwind CSS 4
+* Responsive design optimized for mobile/tablet/desktop
 
 ### Backend
 
-* FastAPI (Python)
+* Next.js API Routes
 * REST APIs
-* JWT Authentication
+* JWT Authentication with HTTP-only cookies
 
 ### Database
 
-* PostgreSQL / MySQL
+* MongoDB Atlas with Prisma ORM
 
 ### AI & Machine Learning
 
-* Gemini API / LLM integration
-* Scikit-learn for prediction models
+* Groq AI for chatbot integration
+* LLM-powered assistance
 
 ### Deployment
 
 * Docker
-* NGINX
-* Cloud Hosting (AWS / GCP)
+* Vercel / Railway / Self-hosted options
 
 ---
 
@@ -144,20 +143,39 @@ git clone https://github.com/yourusername/smart-classroom-system.git
 Navigate to the project directory
 
 ```
-cd smart-classroom-system
+cd smart-classroom-system/erpsys-nextjs
 ```
 
-Install backend dependencies
+Install dependencies
 
 ```
-pip install -r requirements.txt
+npm install
 ```
 
-Run the FastAPI server
+Setup environment variables (see DEPLOYMENT.md)
 
 ```
-uvicorn main:app --reload
+cp .env.example .env.local
 ```
+
+Initialize database
+
+```
+npm run db:push
+npm run db:seed
+```
+
+Run the development server
+
+```
+npm run dev
+```
+
+Access the application at `http://localhost:3000`
+
+**Default Credentials:**
+- Admin: `username: admin` | `password: admin123`
+- Student: `username: student001` | `password: student123`
 
 ---
 
